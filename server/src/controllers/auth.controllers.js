@@ -1,6 +1,6 @@
 import { login, signIn } from "../service/auth.service.js";
 
-const userRoles = ["GUEST", "ROLE", "USER"];
+const userRoles = ["GUEST", "ADMIN", "USER"];
 export const signupControllers = async (req, res) => {
     const data = req.body;
     if (!data) {
