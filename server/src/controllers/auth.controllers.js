@@ -49,3 +49,9 @@ export const loginControllers = async (req, res) => {
 // email
 // password
 // guest -> admin -> user
+<<<<<<< Updated upstream
+=======
+export const createProduct = async () => {
+    
+};
+>>>>>>> Stashed changes
