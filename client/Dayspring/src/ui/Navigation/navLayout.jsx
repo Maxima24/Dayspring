@@ -1,6 +1,10 @@
 import React from 'react'
 import daySpringLogo from "../../assets/daySpringLogo.png"
 import Button from '../../components/Button'
+<<<<<<< Updated upstream
+=======
+// import store from './store'
+>>>>>>> Stashed changes
 
 function NavLayout() {
   return (

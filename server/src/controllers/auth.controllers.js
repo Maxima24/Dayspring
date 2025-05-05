@@ -53,3 +53,7 @@ export const getUserDetails = async (req, res) => {
         });
     }
 };
+
+export const createProduct = async () => {
+    
+};

@@ -1,7 +1,21 @@
+<<<<<<< Updated upstream
 import React from 'react'
 import { motion } from 'motion/react'
 
 function SignUp() {
+=======
+import React from "react";
+import { Form, useActionData, useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
+import store from "../../store";
+import { signUp } from "../../feautures/userSlice";
+import { CreateUser } from "../../services/apiAuth";
+
+const SignUpForm = () => {
+  
+  const actionData = useActionData()
+  const navigate= useNavigate()
+>>>>>>> Stashed changes
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-slate-950">
     <div className="absolute inset-0 z-0">
@@ -47,6 +61,7 @@ function SignUp() {
       <div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-cyan-500 opacity-50 blur-3xl"></div>
     </div>
 
+<<<<<<< Updated upstream
     {/* Login Form Section */}
     <div className="relative z-50 flex flex-col items-center justify-center px-5 py-10 bg-white rounded-lg shadow-lg w-full max-w-md">
       <h2 className="text-3xl font-bold text-center mb-5">Sign Up Now </h2>
@@ -59,6 +74,57 @@ function SignUp() {
             placeholder="Enter your email"
             className="w-full p-3 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
           />
+=======
+          <div>
+            <label className="block text-sm text-white mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="••••••••"
+              className="w-full p-2 rounded-md bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white mb-1">Role</label>
+            <select
+              name="role"
+              required
+              className="w-full p-2 rounded-md bg-white/20 text-stone-300 placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            >
+              <option value="">Select a role</option>
+              <option value="GUEST">Guest</option>
+              <option value="USER">User</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+          </div>
+          {actionData?.error && (
+            <p className="text-red-400 text-sm mt-1">{actionData.error}</p>
+          )}
+            <div className="flex items-center justify-center gap-4 ">
+            <button type="submit"
+            
+            className="w-fit px-12 py-2 rounded-md bg-cyan-500 hover:bg-cyan-600 text-white font-semibold" 
+          >
+            Sign Up
+          </button>
+          <button type="button"
+            onClick={()=> navigate("/newuser/login") }
+            className="w-fit  py-2 px-12  rounded-md bg-cyan-500 hover:bg-cyan-600 text-white font-semibold"
+          >
+            Log In
+          </button>
+            </div>
+
+          
+        </Form>
+       
+        <div className="flex items-center gap-2 text-white">
+          <hr className="flex-grow border-white/30" />
+          <span className="text-sm">or</span>
+          <hr className="flex-grow border-white/30" />
+>>>>>>> Stashed changes
         </div>
 
         <div className="mb-4">
@@ -81,8 +147,35 @@ function SignUp() {
         </div>
       </form>
     </div>
+<<<<<<< Updated upstream
   </div>
   )
+=======
+  );
+};
+export async function action({ request }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+
+  console.log("Form Data:", data);
+    const user = await CreateUser(data)
+  // Optionally call an API
+  console.log(user)
+  // const newUser = await CreateUser(data);
+
+  // Dispatch to Redux
+  store.dispatch(signUp(user.data));
+  const state = store.getState()
+  const username = state.user.username
+  console.log(username)
+
+  localStorage.setItem("token",user?.token)
+  const roles = state.user.role
+  
+ 
+  // Redirect or return something
+  return redirect(`/home/${roles}/${username}`); // change as needed}
+>>>>>>> Stashed changes
 }
 
 export default SignUp
