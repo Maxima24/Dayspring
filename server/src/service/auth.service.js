@@ -11,7 +11,7 @@ export const signIn = async (data, res) => {
     });
     if (existingUser) {
         return res.status(400).json({
-            message: "User already exists",
+            message: "User with this email already exists",
         });
     }
     const hashedPassword = await hashPassword(data.password);
@@ -25,12 +25,11 @@ export const signIn = async (data, res) => {
     });
 
     delete user.password;
-    
-    
+
     // create a token
     const token = jwt.sign(
         {
-            id: user._id,
+            id: user.id,
             email: user.email,
             role: user.role,
         },
@@ -40,7 +39,7 @@ export const signIn = async (data, res) => {
         }
     );
     return res.status(201).json({
-        message: "User Created",
+        message: "User Created successfully",
         data: user,
         token,
     });
@@ -57,7 +56,7 @@ export const login = async (data, res) => {
             message: "Invalid Credentials",
         });
     }
-    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+    const isPasswordValid = bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
         return res.status(400).json({
             message: "Invalid Credentials",
@@ -67,7 +66,7 @@ export const login = async (data, res) => {
 
     const token = jwt.sign(
         {
-            id: user._id,
+            id: user.id,
             email: user.email,
             role: user.role,
         },
@@ -81,4 +80,12 @@ export const login = async (data, res) => {
         data: user,
         token,
     });
+};
+
+export const getUserDetails = async (data, res) => {
+    const userDetail = jwt.verify(data, process.env.JWT_SECRET);
+    if (!userDetail) {
+        return res.status(400).json({ message: "Invalid auth token" });
+    }
+    return res.status(200).json({ message: userDetail });
 };

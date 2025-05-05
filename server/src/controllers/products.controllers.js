@@ -8,6 +8,7 @@ export async function getAllProducts(req, res, next) {
     res.status(200).json(products);
 }
 
+
 export async function getProductById(req, res, next) {
     const { id } = req.params;
     const product = await prisma.product.findUnique({
