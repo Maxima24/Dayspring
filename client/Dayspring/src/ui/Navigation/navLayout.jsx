@@ -1,7 +1,9 @@
 import React  from 'react'
 import daySpringLogo from "../../assets/daySpringLogo.png"
 import Button from '../../components/Button'
-import store from '../../store'
+
+// import store from './store'
+
 
 function NavLayout() {
   // const state = store.getState()

@@ -1,7 +1,7 @@
 import { loginSchema, registerSchema } from "../schema/zod.js";
 import { login, signIn } from "../service/auth.service.js";
 
-const userRoles = ["GUEST", "ROLE", "USER"];
+
 export const signupControllers = async (req, res) => {
     const data = registerSchema.parse(req.body);
     await signIn(data, res);
