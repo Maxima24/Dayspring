@@ -4,54 +4,57 @@ import { redirect } from "react-router-dom";
 import store from "../../store";
 import { signUp } from "../../feautures/userSlice";
 import { CreateUser } from "../../services/apiAuth";
+// import { hover } from "motion";
 
 const SignUpForm = () => {
-  const navigate= useNavigate()
+  
+  const navigate = useNavigate();
+
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-slate-950 to-slate-800 px-4 py-5 pb-24 overflow-auto ">
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-xl space-y-6 mb-12 overflow-x-hidden mt-[10rem] ">
-        <h2 className="text-center text-2xl font-bold text-white">Sign Up</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-white px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-semibold text-center text-blue-600 mb-6">Create your account</h2>
 
         <Form method="post" className="space-y-4">
           <div>
-            <label className="block text-sm text-white mb-1">Username</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
             <input
               type="text"
               name="username"
-              placeholder="yourusername"
               required
-              className="w-full p-2 rounded-md bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              placeholder="username"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-white mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
               type="email"
               name="email"
               required
-              placeholder="you@example.com"
-              className="w-full p-2 rounded-md bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              placeholder="johndoe@gmail.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-white mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input
               type="password"
               name="password"
               required
               placeholder="••••••••"
-              className="w-full p-2 rounded-md bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-white mb-1">Role</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
             <select
               name="role"
               required
-              className="w-full p-2 rounded-md bg-white/20 text-stone-300 placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select a role</option>
               <option value="GUEST">Guest</option>
@@ -60,30 +63,35 @@ const SignUpForm = () => {
             </select>
           </div>
 
-          
-        </Form>
-       
-        <div className="flex items-center gap-2 text-white">
-          <hr className="flex-grow border-white/30" />
-          <span className="text-sm">or</span>
-          <hr className="flex-grow border-white/30" />
-        </div>
+          { (
+            <p className="text-sm text-red-500"></p>
+          )}
 
-        <button
-          onClick={() => alert("Google Login Placeholder")}
-          className="w-full py-2 rounded-md border border-white/30 hover:bg-white/10 text-white font-medium flex items-center justify-center gap-2"
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="w-5 h-5"
-          />
-          Continue with Google
-        </button>
+          <div className="flex justify-between gap-4 ">
+           
+            <button 
+              type="submit"
+              className="w-1/2 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium flex-1"
+            >
+              Sign Up
+            </button>
+          </div>
+        </Form>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/newuser/login")}
+            className="text-blue-600 hover:underline cursor-pointer"
+          >
+            Log In
+          </span>
+        </p>
       </div>
     </div>
   );
 };
+
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
@@ -97,7 +105,7 @@ export async function action({ request }) {
   // Dispatch to Redux
   store.dispatch(signUp(user));
   const state = store.getState()
-  const username = state.user.data.username
+  const username = state.user?.data?.username
   console.log(username)
 
   localStorage.setItem("token",user?.token)
@@ -105,6 +113,6 @@ export async function action({ request }) {
   
  
   // Redirect or return something
-  return redirect(`/home/${roles}`); // change as needed}
+  return redirect(`/home/${roles}/${username}`); // change as needed}
 }
 export default SignUpForm;

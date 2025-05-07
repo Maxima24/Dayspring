@@ -1,112 +1,122 @@
-import React from 'react'
-// import store from '../../store'
-import { clearCart, deleteFromCart } from '../../feautures/cartSlice'
-import { useDispatch,useSelector } from 'react-redux'
-import Button from '../../components/Button'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  clearCart,
+  deleteFromCart,
+  increaseQuantity,
+  decreaseQuantity,
+} from '../../feautures/cartSlice';
+import { useNavigate } from 'react-router-dom';
 
 function UserCart() {
-    const navigate = useNavigate()
-    const dispatch =useDispatch()
-    const user = useSelector(state=>state.user)
-    const {username,role} = user
-    const cartItems = useSelector(state=>state.cart.cart)
-    console.log(cartItems)
-   
-    function removeFromCart(id){
-       dispatch(deleteFromCart(id))
-       console.log(id)
-    }
-   
-  return (
-    <div className="p-6 space-y-8 text-blue-300 bg-gradient-to-br from-slate-950 to-slate-800 min-h-screen">
-  <section className="text-2xl font-semibold border-b border-stone-200 pb-4 flex justify-between">
-  <div className='flex gap-2'>
-  <div >
-        <Button onClick={()=> navigate(`/home/${role}/${username}`)
-        } type={"secondary"}>🔙</Button>
-      </div>
-  <h1>Your Cart 🛒</h1>
-  </div>
-  <div >
-        <Button onClick={()=>{
-            dispatch(clearCart())
-        }} type={"secondary"}>Clear Cart</Button>
-      </div>
-   
-  </section>
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const { username, role } = user;
+  const cartItems = useSelector((state) => state.cart.cart);
 
-  {cartItems.length === 0 ? (
-    <p className="text-gray-400">Your cart is empty.</p>
-  ) : (
-    <div className="space-y-6">
-      {/* Cart Items */}
-      <div className="space-y-4">
-        {cartItems.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-col md:flex-row md:items-center bg-white text-black rounded-lg shadow p-4"
+  const removeFromCart = (id) => {
+    dispatch(deleteFromCart(id));
+  };
+
+  const increaseQuantitys = (id) => {
+    dispatch(increaseQuantity(id));
+  };
+
+  const decreaseQuantitys = (id) => {
+    dispatch(decreaseQuantity(id));
+  };
+
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  return (
+    <div className="bg-white min-h-screen p-4 sm:p-6">
+      {/* Header */}
+      <section className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(-1)}>
+          <span className="text-blue-600 text-lg hover:underline">← Back</span>
+        </div>
+        {cartItems.length > 0 && (
+          <button
+            onClick={() => dispatch(clearCart())}
+            className="bprder-blue-400 text-blue px-4 py-2 rounded hover:bg-blue-500 transition"
           >
-            <img
-              src={item.image}
-              alt={item.title}
-              className="h-24 w-full md:w-32 object-cover rounded mb-4 md:mb-0"
-            />
-            <div className="flex-1 md:ml-6">
-              <h3 className="text-lg font-semibold">{item.title}</h3>
-              <p className="text-gray-600">{item.price}</p>
-              <div className="flex items-center space-x-2 mt-2">
+            Clear Cart
+          </button>
+        )}
+      </section>
+
+      {cartItems.length === 0 ? (
+        <p className="text-gray-500 text-center mt-10">Your cart is empty.</p>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left: Cart Items */}
+          <div className="lg:col-span-2 space-y-4">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="border border-gray-200 rounded-lg p-4 bg-white flex flex-col sm:flex-row items-start sm:items-center shadow-sm"
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-24 w-full sm:w-32 object-cover rounded mb-3 sm:mb-0"
+                />
+                <div className="flex-1 sm:ml-6 w-full">
+                  <h3 className="text-lg font-semibold text-blue-800">{item.title}</h3>
+                  <p className="text-blue-500">${item.price.toFixed(2)}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <button
+                      className="px-2 py-1 border border-blue-300 rounded text-blue-700 hover:bg-blue-50"
+                      onClick={() => decreaseQuantitys(item.id)}
+                    >
+                      −
+                    </button>
+                    <span className="min-w-[24px] text-center">{item.quantity}</span>
+                    <button
+                      className="px-2 py-1 border border-blue-300 rounded text-blue-700 hover:bg-blue-50"
+                      onClick={() => increaseQuantitys(item.id)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
                 <button
-                //   onClick={() => decreaseQuantity(item.id)}
-                  className="px-2 py-1 bg-gray-200 rounded"
+                  onClick={() => removeFromCart(item.id)}
+                  className="text-sm text-red-500 hover:underline mt-3 sm:mt-0 sm:ml-6"
                 >
-                  -
-                </button>
-                <span>{item.quantity}</span>
-                <button
-                //   onClick={() => increaseQuantity(item.id)}
-                  className="px-2 py-1 bg-gray-200 rounded"
-                >
-                  +
+                  Remove
                 </button>
               </div>
-            </div>
-            <div className="mt-4 md:mt-0 md:ml-6">
-              <button
-                onClick={()=>removeFromCart(item.id)}
-                className="text-red-500 hover:underline text-sm"
-              >
-                Remove
-              </button>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Summary */}
-      <div className="bg-white text-black rounded-lg shadow p-4 space-y-4">
-        <h2 className="text-xl font-bold">Order Summary</h2>
-        <div className="flex justify-between">
-          <span>Subtotal</span>
-          {/* <span>${totalPrice.toFixed(2)}</span> */}
+          {/* Right: Summary */}
+          <div className="bg-blue-50 rounded-lg shadow p-6 h-fit text-blue-900">
+            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <div className="flex justify-between py-2 border-b border-blue-200">
+              <span>Subtotal</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b border-blue-200">
+              <span>Shipping</span>
+              <span>Free</span>
+            </div>
+            <div className="flex justify-between font-bold text-lg py-2">
+              <span>Total</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-500 transition">
+              Proceed to Checkout
+            </button>
+          </div>
         </div>
-        <div className="flex justify-between">
-          <span>Shipping</span>
-          <span>Free</span>
-        </div>
-        <div className="flex justify-between font-bold text-lg">
-          <span>Total</span>
-          {/* <span>${totalPrice.toFixed(2)}</span> */}
-        </div>
-        <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-          Proceed to Checkout
-        </button>
-      </div>
+      )}
     </div>
-  )}
-</div>
-
-  )
+  );
 }
 
-export default UserCart
+export default UserCart;
