@@ -1,8 +1,11 @@
 const catchasync = (controllers) => {
     return async (req, res, next) => {
-        controllers(req, res, next).catch((err) => {
-            next(err);
-        });
+        try {
+            controllers(req, res, next);
+        } catch (err) {
+            console.log(err, "From catch Async");
+            return nez;
+        }
     };
 };
 

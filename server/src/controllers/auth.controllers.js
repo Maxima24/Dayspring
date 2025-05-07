@@ -4,13 +4,16 @@ import jwt from "jsonwebtoken";
 import prisma from "../../prisma/prisma.js";
 
 export const signupControllers = async (req, res) => {
-    const data = registerSchema.parse(req.body);
-    await signIn(data, res);
+    // const { error } = registerSchema.safeParse(req.body);
+
+    throw new Error("All fields are required");
+
+    // await signIn(data, res);
 };
 export const loginControllers = async (req, res) => {
     const data = req.body;
     if (!data) {
-        return res.json({
+        return res.status(400).json({
             message: "No data provided",
         });
     }
@@ -54,6 +57,4 @@ export const getUserDetails = async (req, res) => {
     }
 };
 
-export const createProduct = async () => {
-    
-};
+export const createProduct = async () => {};

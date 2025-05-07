@@ -3,7 +3,7 @@ import z from "zod";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const UserRole = {
     GUEST: "GUEST",
-    ROLE: "ROLE",
+    ADMIN: "ADMN",
     USER: "USER",
 };
 
@@ -24,7 +24,7 @@ export const registerSchema = z
             .string()
             .min(6, { message: "Password must be at least 6 characters" }),
         username: z.string().min(2),
-        role: z.enum([UserRole.GUEST, UserRole.ROLE, UserRole.USER], {
+        role: z.enum([UserRole.GUEST, UserRole.ADMIN, UserRole.USER], {
             message: "Invalid user role",
         }),
     })
@@ -36,4 +36,9 @@ export const productSchema = z.object({
     price: z.number().positive(),
     image: z.string().url(),
     course_outline: z.string().min(2),
+});
+
+export const cartSchema = z.object({
+    productId: z.string().min(1),
+    quantity: z.number().int().positive().optional(),
 });
